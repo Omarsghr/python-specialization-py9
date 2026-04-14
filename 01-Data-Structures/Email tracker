@@ -1,1 +1,23 @@
+import re
 
+filename = 'try.ss.txt'
+
+try:
+    handle = open(filename)
+except FileNotFoundError:
+    print(f"Error: The file '{filename}' was not found.")
+    quit()
+
+numbers_list = []
+
+for line in handle:
+    # Find all sequences of one or more digits
+    # re.findall returns a list of strings
+    found_nums = re.findall('[0-9]+', line)
+
+    # Convert found strings to integers and add to our list
+    for num in found_nums:
+        numbers_list.append(int(num))
+
+# Output the final calculation
+print(f"Total Sum: {sum(numbers_list)}")
