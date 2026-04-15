@@ -1,0 +1,32 @@
+name = input("Enter file:")
+if len(name) < 1:
+    name = "mbox-short.txt"
+
+try:
+    # Using 'with' is better practice—it closes the file automatically
+    with open(name) as handle:
+        counts = dict()
+
+        for line in handle:
+            words = line.split()
+            
+            # Guardian: Check if the line is too short or doesn't start with 'From'
+            if len(words) < 2 or words[0] != 'From':
+                continue
+                
+            email = words[1]
+            counts[email] = counts.get(email, 0) + 1
+
+    # Find the most frequent sender
+    bigword = None
+    largest = None
+
+    for email, count in counts.items():
+        if largest is None or count > largest:
+            bigword = email
+            largest = count
+
+    print(bigword, largest)
+
+except FileNotFoundError:
+    print(f"File not found: {name}")
