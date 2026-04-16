@@ -1,1 +1,22 @@
+import socket
 
+# Create the socket object
+mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# Connect to the server on port 80 (standard HTTP port)
+mysock.connect(('data.pr4e.org', 80))
+
+# The modification: change 'romeo.txt' to 'intro-short.txt'
+# Note: It is cleaner to use the path '/intro-short.txt' 
+cmd = 'GET http://data.pr4e.org/intro-short.txt HTTP/1.0\r\n\r\n'.encode()
+
+mysock.send(cmd)
+
+while True:
+    data = mysock.recv(512)
+    if len(data) < 1:
+        break
+    # Print the headers and data as they arrive
+    print(data.decode(), end='') 
+
+mysock.close()
