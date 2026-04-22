@@ -1,0 +1,32 @@
+import urllib.request
+import xml.etree.ElementTree as ET # You need this for 'ET' to work!
+import ssl
+
+# Add the SSL ignore code so it doesn't crash on HTTPS sites
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+url = input("Enter location: ")
+if len(url) < 1:
+    url = "http://py4e-data.dr-chuck.net/comments_2397455.xml"
+
+print("Retrieving:", url)
+# Note: Added 'context=ctx' here
+uh = urllib.request.urlopen(url, context=ctx)
+data = uh.read()
+
+print("Retrieved", len(data), "characters")
+
+# This turns the string of text into a 'Tree' of data
+tree = ET.fromstring(data)
+
+# This searches the tree for every tag named <count>
+counts = tree.findall('.//count')
+
+nums = list()
+for result in counts:
+    nums.append(int(result.text))
+
+print('Count:', len(nums))
+print('Sum:', sum(nums))
