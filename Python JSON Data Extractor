@@ -1,0 +1,39 @@
+import urllib.request
+import urllib.parse
+import urllib.error
+import json
+import ssl
+# avoiding ssl certificate errors
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+# take url input from the user
+url = input("enter an url:")
+print("retrieving:", url)
+# send a request to the url and read the data  from the url
+uh = urllib.request.urlopen(url, context=ctx)
+data = uh.read()
+print("retrieving", len(data), "characters")
+# parse the data as json and store it in a variable called js
+try:
+    js = json.loads(data)
+except:
+    js = None
+# if js is non the print error message
+if js is None:
+    print("Error: Invalid JSON data")
+else:
+    print("user counts:", len(js))
+    print("type:", type(js))
+counts = 0
+totals = 0
+for item in js["comments"]:
+ # for each item we need to print the name and the count
+    print("name:", item["name"])
+    print("counts", item["count"])
+    totals += item["count"]
+    counts += 1
+    print("*"*20)
+
+print("Total counts:", counts)
+print("sum:", totals)
